@@ -1,6 +1,7 @@
 import queue
 import threading
 import time
+import kivy
 
 from pySmartDL import SmartDL
 from selenium import webdriver
@@ -8,6 +9,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
+from kivy.app import App
+from kivy.uix.label import Label
 
 save_loc = "G:/KSD/"
 
@@ -59,6 +62,11 @@ class DownloadManagerThread(threading.Thread):
             else:
                 #print("Download Manager: Empty Queue")
                 time.sleep(1)
+
+
+class MyApp(App):
+    def build(self):
+        return Label(text='Hello World')
 
 
 def scrape_urls(url):
@@ -125,5 +133,5 @@ if __name__ == "__main__":
     #
     # for item in data:
     #     download_manager.add(item)
-
+    MyApp().run()
     print("Done")
