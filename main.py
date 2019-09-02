@@ -1,6 +1,8 @@
 import queue
 import threading
 import time
+import os
+os.environ['KIVY_GL_BACKEND'] = 'angle_sdl2'
 import kivy
 
 from pySmartDL import SmartDL
