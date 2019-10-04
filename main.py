@@ -13,8 +13,9 @@ from selenium.webdriver.support.wait import WebDriverWait
 from selenium.common.exceptions import NoSuchElementException
 from kivy.app import App
 from kivy.uix.label import Label
+from selenium.webdriver.chrome.options import Options
 
-save_loc = "G:/KSD/"
+save_loc = "E:/KSD/"
 
 
 class DownloadManager:
@@ -30,20 +31,27 @@ class DownloadManager:
             dl_job = self.q.get()
             print("Starting")
             self.is_serving = True
+            # print(dl_job[3])
+            # time.sleep(2)
             try:
-                obj = SmartDL(dl_job[3][0], dest=dl_job[-1])
+                obj = SmartDL(dl_job[3], dest=dl_job[-1])
                 obj.start(blocking=False)
                 # path = obj.get_dest()
                 while not obj.isFinished():
                     print("Speed: %s" % obj.get_speed(human=True))
                     print("Progress: %s" % (obj.get_progress() * 100))
-
+                print("ENDED")
                 self.is_serving = False
             except Exception:
                 print("Error")
+                # errors = obj.get_errors()
+                # for error in errors:
+                #     print(str(type(error)))
+                self.is_serving = False
                 # self.q.put(dl_job)
-        else:
-            print("currently serving, waiting")
+
+        #else:
+           # print("currently serving, waiting")
 
             # if obj.isSuccessful():
             #     print("DOWNLOADED SUCCESSFULLY!!")
@@ -72,7 +80,9 @@ class MyApp(App):
 
 
 def scrape_urls(url):
-    driver = webdriver.Chrome("C:/chromedriver.exe")
+    #chrome_options = Options()
+    #chrome_options.add_argument("--headless")
+    driver = webdriver.Chrome("C:/chromedriver.exe") # , options=chrome_options
     driver.get(url)
 
     print("Extracting...")
@@ -118,7 +128,10 @@ def scrape_urls(url):
             else:
                 print("UNKNOWN QUALITY: " + quality.text)
 
+        # FOR HIGHEST QUALITY DOWNLOAD
+        quality_links.reverse()
         episode.append(quality_links)
+
         episode.append(save_loc + str(episode[0]).replace(' ', '_') + ".mp4")
 
         print(episode)
@@ -127,13 +140,15 @@ def scrape_urls(url):
 
 
 if __name__ == "__main__":
-    # download_manager = DownloadManager()
-    # dm_thread = DownloadManagerThread()
-    # dm_thread.start()
-    #
-    # data = scrape_urls("https://kissanime.ru/Anime/Dr-Stone")
-    #
-    # for item in data:
-    #     download_manager.add(item)
-    MyApp().run()
-    print("Done")
+    download_manager = DownloadManager()
+    dm_thread = DownloadManagerThread()
+    dm_thread.start()
+
+    data = scrape_urls("https://kissanime.ru/Anime/Radiant")
+
+    for item in data:
+        # print(item)
+        download_manager.add(item)
+
+    # MyApp().run()
+    # print("Done")
