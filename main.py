@@ -12,7 +12,8 @@ from selenium.webdriver.chrome.options import Options
 
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
-from PyQt5.QtWidgets import QApplication, QLabel, QProgressBar, QWidget, QVBoxLayout, QLineEdit, QPushButton
+from PyQt5.QtWidgets import QApplication, QLabel, QProgressBar, QWidget, QVBoxLayout, QLineEdit, QPushButton, \
+    QRadioButton, QCheckBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import pyqtSignal
@@ -269,12 +270,17 @@ class WindowDownloader(QWidget):
 
         self.grid = QtWidgets.QGridLayout()
         self.grid.addWidget(QLabel('#'), 0, 0, 1, 1)
-        self.grid.addWidget(QLabel('Quality'), 0, 1, 1, 3)
-        self.grid.addWidget(QLabel('Download'), 0, 3, 1, 1)
+        quality = QLabel('Quality')
+        quality.setAlignment()
+        self.grid.addWidget(quality, 0, 1, 1, 3)
+        self.grid.addWidget(QLabel('Download'), 0, 4, 1, 1)
 
-        self.grid.addWidget(QLabel('1080'), 1, 1, 1, 1)
-        self.grid.addWidget(QLabel('720'), 1, 2, 1, 1)
-        self.grid.addWidget(QLabel('360'), 1, 3, 1, 1)
+        self.grid.addWidget(QLabel('1'), 1, 0, 1, 1)
+        self.grid.addWidget(QRadioButton('1080'), 1, 1, 1, 1)
+        self.grid.addWidget(QRadioButton('720'), 1, 2, 1, 1)
+        self.grid.addWidget(QRadioButton('360'), 1, 3, 1, 1)
+        self.grid.addWidget(QCheckBox(''), 1, 4, 1, 1)
+
 
         # for episode in episode_list:
 
