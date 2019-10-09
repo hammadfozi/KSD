@@ -13,7 +13,7 @@ from selenium.webdriver.chrome.options import Options
 import sys
 from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtWidgets import QApplication, QLabel, QProgressBar, QWidget, QVBoxLayout, QLineEdit, QPushButton, \
-    QRadioButton, QCheckBox
+    QRadioButton, QCheckBox, QHBoxLayout, QTableWidget, QTableWidgetItem, QButtonGroup, QGroupBox
 from PyQt5.QtCore import Qt
 from PyQt5.QtGui import QPalette, QColor
 from PyQt5.QtCore import pyqtSignal
@@ -268,24 +268,71 @@ class WindowDownloader(QWidget):
         self.setMinimumWidth(int(resolution.width() / 1.5))
         self.setMinimumHeight(int(resolution.height() / 1.5))
 
-        self.grid = QtWidgets.QGridLayout()
-        self.grid.addWidget(QLabel('#'), 0, 0, 1, 1)
-        quality = QLabel('Quality')
-        quality.setAlignment()
-        self.grid.addWidget(quality, 0, 1, 1, 3)
-        self.grid.addWidget(QLabel('Download'), 0, 4, 1, 1)
+        # self.layout = QHBoxLayout()
 
-        self.grid.addWidget(QLabel('1'), 1, 0, 1, 1)
-        self.grid.addWidget(QRadioButton('1080'), 1, 1, 1, 1)
-        self.grid.addWidget(QRadioButton('720'), 1, 2, 1, 1)
-        self.grid.addWidget(QRadioButton('360'), 1, 3, 1, 1)
-        self.grid.addWidget(QCheckBox(''), 1, 4, 1, 1)
+        # self.grid = QtWidgets.QGridLayout()
+        # self.grid.addWidget(QLabel('#'), 0, 0, 1, 1)
+        # quality = QLabel('Quality')
+        # quality.setAlignment()
+        # self.grid.addWidget(quality, 0, 1, 1, 3)
+        # self.grid.addWidget(QLabel('Download'), 0, 4, 1, 1)
+        #
+        # self.grid.addWidget(QLabel('1'), 1, 0, 1, 1)
+        # self.grid.addWidget(QRadioButton('1080'), 1, 1, 1, 1)
+        # self.grid.addWidget(QRadioButton('720'), 1, 2, 1, 1)
+        # self.grid.addWidget(QRadioButton('360'), 1, 3, 1, 1)
+        # self.grid.addWidget(QCheckBox(''), 1, 4, 1, 1)
+
+        # self.layout.addWidget(QLabel('#'))
+        # self.layout.addWidget(QLabel('Quality'))
+        # self.layout.addWidget(QLabel('Download'))
 
 
         # for episode in episode_list:
 
-        self.setLayout(self.grid)
+        #self.setLayout(self.layout)
 
+        self.tableWidget = QTableWidget()
+        self.tableWidget.setRowCount(len(episode_list))
+        self.tableWidget.setColumnCount(3)
+        self.tableWidget.setFocusPolicy(QtCore.Qt.NoFocus)
+        self.tableWidget.setEditTriggers(QtWidgets.QAbstractItemView.NoEditTriggers)
+        self.tableWidget.setSelectionMode(QtWidgets.QAbstractItemView.NoSelection)
+
+        self.tableWidget.setHorizontalHeaderItem(0, QTableWidgetItem("Episode"))
+        self.tableWidget.setHorizontalHeaderItem(1, QTableWidgetItem("Quality"))
+        self.tableWidget.setHorizontalHeaderItem(2, QTableWidgetItem("Download"))
+
+        # self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+        self.tableWidget.horizontalHeader().setStretchLastSection(True)
+
+        self.tableWidget.verticalHeader().setVisible(False)
+        self.tableWidget.verticalHeader().setSectionResizeMode(0, QtWidgets.QHeaderView.ResizeToContents)
+        #self.tableWidget.setHorizontalHeaderItem(0, QTableWidgetItem("Quality"))
+
+        label = QLabel(str(0 + 1))
+        label.setAlignment(Qt.AlignCenter)
+        self.tableWidget.setCellWidget(0, 0, label)
+        self.tableWidget.horizontalHeader().setSectionResizeMode(1, QtWidgets.QHeaderView.ResizeToContents)
+
+
+        buttonBox = QHBoxLayout()
+        radio1 = QRadioButton('1080p')
+        radio1.setChecked(True)
+        buttonBox.addWidget(radio1)
+        buttonBox.addWidget(QRadioButton('720p'))
+        buttonBox.addWidget(QRadioButton('360p'))
+        buttonBox.addStretch(1)
+        self.buttongroup = QGroupBox(self)
+        self.buttongroup.setLayout(buttonBox)
+        self.buttongroup.setAlignment(Qt.AlignHCenter)
+        self.tableWidget.setCellWidget(0, 1, self.buttongroup)
+
+        self.btn_download = QPushButton("START")
+
+        self.layout = QVBoxLayout(self)
+        self.layout.addWidget(self.tableWidget)
+        self.layout.addWidget(self.btn_download)
 
 if __name__ == "__main__":
     # download_manager = DownloadManager()
